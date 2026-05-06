@@ -12,14 +12,14 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    slug: 'proyecto-1',
-    title: 'Proyecto 1',
-    description: 'Descripción breve de tu proyecto.',
-    longDescription: 'Aquí puedes escribir una descripción mucho más detallada de tu proyecto. Explica el problema que resuelve, las decisiones técnicas que tomaste, y cómo tu solución beneficia a los usuarios.',
-    tech: ['React', 'Next.js', 'Tailwind CSS'],
-    demo: '#',
-    github: '#',
-    images: ['/projects/placeholder-1.png', '/projects/placeholder-2.png', '/projects/placeholder-3.png'],
+    slug: 'proyecto-Javascript',
+    title: 'e-Commerce de Perfumes',
+    description: 'e-Commerce de perfumes, realizado en el curso de Javascript de Coderhouse',
+    longDescription: 'E-commerce completo de perfumes desarrollado durante el curso de Javascript en Coderhouse. Incluye catálogo de productos, carrito de compras, y diseño responsivo.',
+    tech: ['HTML', 'CSS', 'Javascript', 'Vercel'],
+    demo: 'https://proyecto-javascript-perfume.vercel.app/',
+    github: 'https://github.com/JuanToscanini/ProyectoJavaScript',
+    images: ['/images/perfumes.png', '/projects/placeholder-2.png', '/projects/placeholder-3.png'],
     features: [
       'Interfaz intuitiva y responsiva',
       'Sistema de autenticación seguro',

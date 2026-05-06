@@ -1,21 +1,6 @@
-export default function Proyectos() {
-  const projects = [
-    {
-      title: 'Proyecto 1',
-      description: 'Descripción breve de tu proyecto.',
-      tech: ['React', 'Next.js', 'Tailwind'],
-      demo: '#',
-      github: '#'
-    },
-    {
-      title: 'Proyecto 2',
-      description: 'Otro proyecto destacado.',
-      tech: ['Node.js', 'TypeScript'],
-      demo: '#',
-      github: '#'
-    }
-  ];
+import { projects } from '@/data/projects';
 
+export default function Proyectos() {
   return (
     <section id="proyectos" className="py-32" style={{ backgroundColor: '#141E22' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -23,15 +8,25 @@ export default function Proyectos() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
               <a 
-                key={project.title} 
+                key={project.slug} 
                 href={`/proyectos/${project.slug}`}
-                className="block border rounded-lg p-6 hover:scale-105 transition-transform duration-300 shadow-lg"
+                className="block border rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 shadow-lg"
                 style={{ 
                   background: 'linear-gradient(135deg, rgba(30, 48, 53, 0.9), rgba(20, 30, 34, 0.8))',
                   borderColor: '#94A3B8',
                   animationDelay: `${index * 0.1}s` 
                 }}
               >
+                {project.images?.[0] && (
+                  <div className="w-full">
+                    <img 
+                      src={project.images[0]} 
+                      alt={project.title} 
+                      className="w-full h-48 object-cover"
+                    />
+                  </div>
+                )}
+                <div className="p-6">
                 <h3 className="text-xl font-semibold mb-2" style={{ color: '#CBD5E1' }}>{project.title}</h3>
                 <p className="mb-4" style={{ color: '#CBD5E1' }}>{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -43,6 +38,7 @@ export default function Proyectos() {
                 </div>
                 <div className="flex gap-4">
                   <span className="transition-colors hover:underline" style={{ color: '#CBD5E1' }}>Ver más →</span>
+                </div>
                 </div>
               </a>
             ))}
