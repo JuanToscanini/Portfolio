@@ -1,78 +1,130 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  opacity: number;
+}
 
 export default function SobreMi() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
   useEffect(() => {
-    const P = {
-      bg: '#0A0E10',
-      primary: '#94A3B8',
-      secondary: '#94A3B8',
-      accent: '#94A3B8',
-      text: '#F1F5F9',
-      edge: '#94A3B8'
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const particles: Particle[] = [];
+    const particleCount = 35;
+    let animationId: number;
+    let mouseX = 0;
+    let mouseY = 0;
+
+    const resizeCanvas = () => {
+      const section = canvas.parentElement;
+      if (section) {
+        canvas.width = section.offsetWidth;
+        canvas.height = section.offsetHeight;
+      }
     };
 
-    function createLine(x1: number, y1: number, x2: number, y2: number, col: string, w: number, delay: number, dur: number) {
-      const len = Math.hypot(x2 - x1, y2 - y1);
-      return '<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" ' +
-        'stroke="' + col + '" stroke-width="' + w + '" stroke-linecap="round" ' +
-        'stroke-dasharray="' + len + '" style="--len:' + len + '; animation: drawEdge ' + dur + 's ease-out forwards ' + delay + 's"/>';
-    }
-
-    function createCircle(cx: number, cy: number, r: number, fill: string, col: string, delay: number, w: number = 1.2, extra: string = '') {
-      return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="' + fill + '" stroke="' + col + '" stroke-width="' + w + '" ' +
-        'opacity="0" transform-origin="' + cx + 'px ' + cy + 'px" ' +
-        'style="animation: nodeIn .4s cubic-bezier(.34,1.56,.64,1) forwards ' + delay + 's' + (extra ? ';' + extra : '') + '"/>';
-    }
-
-    const cx = 175, cy = 175;
-    const orbits = [
-      { r: 60, n: 4, col: P.primary, sz: 9, dur: 24 },
-      { r: 110, n: 6, col: P.secondary, sz: 7, dur: 40 }
-    ];
-
-    let out = '';
-
-    orbits.forEach(({ r, col }, i) => {
-      out += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + col + '" stroke-width="0.4" stroke-dasharray="3 6" opacity="0" style="animation: fadeIn .5s ease forwards ' + (0.5 + i * 0.4) + 's"/>';
-    });
-
-    out += '<circle cx="' + cx + '" cy="' + cy + '" r="14" fill="none" stroke="' + P.accent + '" stroke-width="1" opacity="0" style="animation: ripple 6s ease-out infinite 4s"/>';
-    out += '<circle cx="' + cx + '" cy="' + cy + '" r="14" fill="none" stroke="' + P.accent + '" stroke-width="1" opacity="0" style="animation: ripple 6s ease-out infinite 6s"/>';
-
-    orbits.forEach(({ r, n, col, sz, dur }, oi) => {
-      const dir = oi % 2 === 0 ? 'orbitCW' : 'orbitCCW';
-      out += '<g style="transform-origin: ' + cx + 'px ' + cy + 'px; animation: ' + dir + ' ' + dur + 's linear infinite 2s">';
-      for (let i = 0; i < n; i++) {
-        const a = (i / n) * 2 * Math.PI;
-        const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
-        out += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + sz + '" ' +
-          'fill="' + P.bg + '" stroke="' + col + '" stroke-width="1" opacity="0" ' +
-          'transform-origin="' + x.toFixed(1) + 'px ' + y.toFixed(1) + 'px" ' +
-          'style="animation: nodeIn .4s cubic-bezier(.34,1.56,.64,1) forwards ' + (1 + oi * 0.4 + i * 0.1) + 's"/>';
+    const initParticles = () => {
+      particles.length = 0;
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.05,
+          vy: (Math.random() - 0.5) * 0.05,
+          size: Math.random() * 3 + 1,
+          opacity: Math.random() * 0.5 + 0.3
+        });
       }
-      out += '</g>';
+    };
 
-      for (let i = 0; i < n; i++) {
-        const a = (i / n) * 2 * Math.PI;
-        const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
-        out += createLine(cx, cy, x, y, P.edge, 0.4, 1.2 + oi * 0.3 + i * 0.08, 0.3);
-      }
-    });
+    const drawParticles = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    out += createCircle(cx, cy, 20, P.bg, P.accent, 0.1, 1.5, 'animation: nodeIn .4s cubic-bezier(.34,1.56,.64,1) forwards .1s, breathe 5s ease-in-out infinite 4s');
+      particles.forEach((p, i) => {
+        // Update position
+        p.x += p.vx;
+        p.y += p.vy;
 
-    const svg = '<svg width="350" height="350" viewBox="0 0 350 350">' + out + '</svg>';
-    const container = document.getElementById('radial-orbit-svg');
-    if (container) {
-      container.innerHTML = svg;
-    }
+        // Bounce off walls
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        // Mouse interaction
+        const dx = mouseX - p.x;
+        const dy = mouseY - p.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 100) {
+          p.vx += dx * 0.0003;
+          p.vy += dy * 0.0003;
+        }
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(148, 163, 184, ${p.opacity})`;
+        ctx.fill();
+
+        // Draw connections
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx2 = p.x - p2.x;
+          const dy2 = p.y - p2.y;
+          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+
+          if (dist2 < 100) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(148, 163, 184, ${0.25 * (1 - dist2 / 100)})`;
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animationId = requestAnimationFrame(drawParticles);
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    resizeCanvas();
+    initParticles();
+    drawParticles();
+
+    window.addEventListener('resize', resizeCanvas);
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resizeCanvas);
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
   }, []);
 
   return (
-    <section id="sobremi" className="py-32" style={{ backgroundColor: '#0A0E10' }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="sobremi" className="py-32 relative" style={{ backgroundColor: '#0A0E10' }}>
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 pointer-events-none"
+        style={{ zIndex: 0 }}
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative" style={{ zIndex: 1 }}>
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left side - Title and Text */}
           <div className="space-y-4 p-6" style={{ color: '#CBD5E1' }}>
@@ -86,10 +138,8 @@ export default function SobreMi() {
             </p>
           </div>
           
-          {/* Right side - Orbital Animation */}
-          <div className="flex justify-center p-6">
-            <div id="radial-orbit-svg"></div>
-          </div>
+          {/* Right side - empty for particles */}
+          <div className="p-6 min-h-[350px]"></div>
         </div>
       </div>
     </section>
