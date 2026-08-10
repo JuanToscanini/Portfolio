@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { projects } from '@/data/projects';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import ImageCarousel from '@/components/ui/ImageCarousel';
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -36,12 +37,23 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
               {tech}
             </span>
           ))}
+          {project.esPrimerProyecto && (
+            <span
+              className="px-3 py-1 rounded-full text-sm"
+              style={{ backgroundColor: '#292524', color: '#FBBF24', border: '1px solid #92400E' }}
+            >
+              Primer proyecto
+            </span>
+          )}
         </div>
 
         {/* Description */}
         <div className="mb-12">
           <h2 className="text-2xl font-semibold mb-4" style={{ color: '#CBD5E1' }}>Descripción</h2>
           <p style={{ color: '#94A3B8', lineHeight: '1.7' }}>{project.longDescription}</p>
+          {project.nota && (
+            <p className="italic mt-3" style={{ color: '#94A3B8', lineHeight: '1.7' }}>{project.nota}</p>
+          )}
         </div>
 
         {/* Features */}
@@ -63,13 +75,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         {project.images && project.images.length > 0 && (
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-6" style={{ color: '#CBD5E1' }}>Galería de imágenes</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {project.images.map((img, index) => (
-                <div key={index} className="rounded-lg overflow-hidden border" style={{ borderColor: '#94A3B8' }}>
-                  <img src={img} alt={`${project.title} screenshot ${index + 1}`} className="w-full h-auto" />
-                </div>
-              ))}
-            </div>
+            <ImageCarousel images={project.images} alt={project.title} />
           </div>
         )}
 

@@ -49,7 +49,7 @@ export default function Contacto() {
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold mb-2 text-center animate-fade-in" style={{ color: '#CBD5E1' }}>Contacto</h2>
         <p className="mb-4 text-center animate-slide-left" style={{ color: '#CBD5E1' }}>
-          ¿Tienes un proyecto en mente? ¡Hablemos!
+          Abierto a nuevas oportunidades y desafíos. Escribime.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-3 animate-scale-in">

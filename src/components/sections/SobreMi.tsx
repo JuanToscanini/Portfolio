@@ -130,11 +130,10 @@ export default function SobreMi() {
           <div className="space-y-4 p-6" style={{ color: '#CBD5E1' }}>
             <h2 className="text-3xl font-bold mb-8" style={{ color: '#CBD5E1' }}>Sobre Mi</h2>
             <p>
-              Estudiante de Programación en la UTN FRCU enfocado en el desarrollo Fullstack. 
-              <br /><br />
-              Me apasiona resolver problemas complejos mediante un enfoque analítico en cada línea de código!
-              <br /><br />
-              Soy un firme entusiasta del aprendizaje continuo y disfruto el desafío de explorar nuevas tecnologías y lenguajes para expandir mis horizontes técnicos y adaptarme a soluciones innovadoras.
+              Técnico Universitario en Programación, egresado de la UTN FRCU en julio de 2026. Me especializo en desarrollo full-stack con React y Node.js, con experiencia práctica en proyectos reales, aplicando tecnologías modernas y metodologías colaborativas.
+            </p>
+            <p>
+              Actualmente en búsqueda de mi primera oportunidad laboral como desarrollador full-stack, con muchas ganas de sumarme a un equipo y seguir creciendo en proyectos productivos.
             </p>
           </div>
           
