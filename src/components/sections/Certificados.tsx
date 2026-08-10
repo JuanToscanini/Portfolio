@@ -7,24 +7,43 @@ export default function Certificados() {
         <h2 className="text-3xl font-bold mb-12 text-center animate-fade-in" style={{ color: '#CBD5E1' }}>Certificados</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {certificates.map((cert, index) => (
-            <a 
+            <div
               key={cert.id}
-              href={cert.url}
-              target="_blank"
-              rel="noopener noreferrer"
               className="block border rounded-lg overflow-hidden hover:scale-105 transition-transform duration-300 shadow-lg"
-              style={{ 
+              style={{
                 background: 'linear-gradient(135deg, rgba(30, 48, 53, 0.9), rgba(20, 30, 34, 0.8))',
                 borderColor: '#94A3B8',
-                animationDelay: `${index * 0.1}s` 
+                animationDelay: `${index * 0.1}s`
               }}
             >
-              <div className="p-6 text-center">
-                <h3 className="text-lg font-semibold mb-2" style={{ color: '#CBD5E1' }}>{cert.title}</h3>
-                <p className="text-sm mb-4" style={{ color: '#94A3B8' }}>{cert.date}</p>
-                <span className="text-sm hover:underline" style={{ color: '#CBD5E1' }}>Ver certificado →</span>
+              <div className="w-full">
+                <img
+                  src={cert.imagen}
+                  alt={cert.titulo}
+                  className="w-full h-48 object-cover"
+                />
               </div>
-            </a>
+              <div className="p-6 text-center">
+                <h3 className="text-lg font-semibold mb-2" style={{ color: '#CBD5E1' }}>{cert.titulo}</h3>
+                <span
+                  className="inline-block px-3 py-1 rounded-full text-xs mb-4"
+                  style={{ backgroundColor: '#1E3035', color: '#CBD5E1' }}
+                >
+                  {cert.categoria}
+                </span>
+                <div>
+                  <a
+                    href={cert.archivo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm hover:underline"
+                    style={{ color: '#CBD5E1' }}
+                  >
+                    Ver certificado →
+                  </a>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

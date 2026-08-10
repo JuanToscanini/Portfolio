@@ -1,4 +1,5 @@
 import { projects } from '@/data/projects';
+import Contacto from './Contacto';
 
 export default function Proyectos() {
   return (
@@ -43,6 +44,17 @@ export default function Proyectos() {
               </a>
             ))}
           </div>
+
+        {/* Contacto anidado como tarjeta dentro de Proyectos */}
+        <div
+          className="mt-20 rounded-xl border overflow-hidden"
+          style={{
+            borderColor: '#94A3B8',
+            background: 'linear-gradient(135deg, rgba(30, 48, 53, 0.9), rgba(20, 30, 34, 0.8))',
+          }}
+        >
+          <Contacto />
+        </div>
       </div>
     </section>
   );
