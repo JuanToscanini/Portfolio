@@ -5,7 +5,7 @@ Portfolio personal desarrollado con Next.js, donde muestro mi perfil como desarr
 
 ## Demo
 
-[portfolio-sigma-livid-93.vercel.app](https://juantoscanini.vercel.app/)
+[https://juantoscanini.vercel.app](https://juantoscanini.vercel.app/)
 
 ## Tecnologías utilizadas
 
